@@ -1,20 +1,4 @@
 // SPDX-License-Identifier: MIT
-
-// pragma solidity ^0.8.0;
-
-// contract BasicDutchAuction {
-
-//     constructor(uint256 _reservePrice, uint256 _numBlocksAuctionOpen, uint256 _offerPriceDecrement) {
-
-//     }
-
-//     function bid() public payable returns(address) {
-//         return address(0);
-//     }
-
-// }
-
-
 pragma solidity ^0.8.0;
 
 contract BasicDutchAuction {
@@ -52,13 +36,12 @@ contract BasicDutchAuction {
     }
 
     function placeBid() external payable {
-        require(block.number >= startBlock && block.number <= endBlock, "Auction not open");
         require(!auctionEnded, "Auction already ended");
-        require(!itemSold, "Item already sold");
+        // require(!itemSold, "Item already sold");
         require(msg.value > 0, "Bid amount must be greater than 0");
 
-        uint256 currentPrice = getCurrentPrice();
-        require(msg.value >= currentPrice, "Bid amount is below current price");
+        // uint256 currentPrice = getCurrentPrice();
+        // require(msg.value >= currentPrice, "Bid amount is below current price");
 
         if (msg.value > highestBid) {
             if (highestBid != 0) {
@@ -76,13 +59,16 @@ contract BasicDutchAuction {
             endAuction();
         }
     }
-
-    function endAuction() internal {
-        require(!auctionEnded, "Auction already ended");
+ 
+    function endAuction() public {
+        // require(!auctionEnded, "Auction already ended");
         auctionEnded = true;
         itemSold = true;
 
+        // uint256 highestBidAmount = bids[highestBidder];
         if (highestBidder != address(0)) {
+            bids[highestBidder] = 0;  // Reset the highest bidder's bid amount
+            // Transfer the funds to the seller
             seller.transfer(highestBid);
             emit AuctionEnded(highestBidder, highestBid);
         } else {
@@ -90,20 +76,20 @@ contract BasicDutchAuction {
         }
     }
 
-    function getCurrentPrice() public view returns (uint256) {
-        uint256 currentBlock = block.number;
-        if (currentBlock <= startBlock) {
-            return initialPrice;
-        }
-        uint256 blocksElapsed = currentBlock - startBlock;
-        uint256 priceDecrement = blocksElapsed * offerPriceDecrement;
-        return initialPrice - priceDecrement;
-    }
+    // function getCurrentPrice() public view returns (uint256) {
+    //     uint256 currentBlock = block.number;
+    //     if (currentBlock <= startBlock) {
+    //         return initialPrice;
+    //     }
+    //     uint256 blocksElapsed = currentBlock - startBlock;
+    //     uint256 priceDecrement = blocksElapsed * offerPriceDecrement;
+    //     return initialPrice - priceDecrement;
+    // }
 
     function refundBid(address bidder) external {
-        require(auctionEnded, "Auction has not ended yet");
-        require(bids[bidder] > 0, "No bid to refund");
+        require(auctionEnded, "Auction has not ended yet"); 
         require(bidder != highestBidder, "Highest bidder cannot refund");
+        require(bids[bidder] > 0, "No bid to refund");
 
         uint256 refundAmount = bids[bidder];
         bids[bidder] = 0;
