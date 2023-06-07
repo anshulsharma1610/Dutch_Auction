@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { NFTDutchAuction } from "./NFTDutchAuction.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract ERC721Token is ERC721URIStorage, Ownable {
-    constructor() ERC721("MyToken", "MTK") {}
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
 
-    // function mint(address to, uint256 tokenId, string memory tokenURI) external onlyOwner {
-    //     _mint(to, tokenId);
-    //     _setTokenURI(tokenId, tokenURI);
-    // }
-    function mint(address to, uint256 tokenId, string memory tokenURI) external onlyOwner {
-        _mint(to, tokenId);
+    constructor() ERC721("PortfolioNFT", "PRF") {}
+
+    function mint(address to, string memory tokenURI) public onlyOwner returns (uint256) {
+        uint256 tokenId = _tokenIds.current();
+        _tokenIds.increment();
+        _safeMint(to, tokenId);
         _setTokenURI(tokenId, tokenURI);
 
-        // Approve NFTDutchAuction contract to transfer the token
-        NFTDutchAuction(nftDutchAuctionContractAddress).receiveApproval(address(this), tokenId);
+        return tokenId;
     }
 }
