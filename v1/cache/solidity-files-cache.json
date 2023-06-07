@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\SEM_3\\assignment\\DutchAuction\\v1\\contracts\\BasicDutchAuction.sol": {
-      "lastModificationDate": 1685496134788,
-      "contentHash": "63b7563e350228854a427ea38540d369",
+      "lastModificationDate": 1685496190684,
+      "contentHash": "52da8b9b92382b4a7a675ef7482fdd85",
       "sourceName": "contracts/BasicDutchAuction.sol",
       "solcConfig": {
         "version": "0.8.18",
