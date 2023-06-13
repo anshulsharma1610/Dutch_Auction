@@ -152,7 +152,7 @@ contract NFTDutchAuction_ERC20Bids is Initializable, OwnableUpgradeable, UUPSUpg
             permitData.deadline,
             permitData.nonce
         );
-        // require(_verifyPermit(permitData.owner, digest, permitData.v, permitData.r, permitData.s), "Invalid permit signature");
+        require(_verifyPermit(permitData.owner, digest, permitData.v, permitData.r, permitData.s), "Invalid permit signature");
 
         placeBid(bidAmount);
     }
